@@ -2,88 +2,76 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Smooth Cam Pro</title>
     <style>
-        :root {
-            --bg-color: #050505;
-            --ui-color: rgba(255, 255, 255, 0.9);
-            --accent: #ffb800;
-            --glass: rgba(0, 0, 0, 0.4);
-        }
-        * { box-sizing: border-box; touch-action: manipulation; }
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: var(--bg-color); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            overflow: hidden; color: white;
-        }
-
-        #app-container { position: relative; width: 100%; height: 100%; }
-        
-        /* Camera Engine */
-        #video-viewport { 
-            width: 100%; height: 100%; object-fit: cover; 
-            transform: scaleX(-1); /* Mirror voor selfie feel */
-        }
-
-        /* Overlay UI Layers */
-        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        
-        /* Header / Tools */
-        header { 
-            position: absolute; top: 40px; width: 100%; display: flex; justify-content: space-between; 
-            padding: 0 20px; z-index: 100; pointer-events: auto;
-        }
-
-        /* Pro Slider Interface */
-        #control-panel {
-            position: absolute; bottom: 150px; left: 0; width: 100%;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            pointer-events: auto; transition: transform 0.3s;
-        }
-
-        .slider-row { display: flex; align-items: center; gap: 15px; }
-        input[type=range] { flex: 1; accent-color: var(--accent); }
-
-        /* Shutter Button */
-        .bottom-bar {
-            position: absolute; bottom: 30px; width: 100%;
-            display: flex; justify-content: space-around; align-items: center;
-            pointer-events: auto;
-        }
-
-        .shutter {
-            width: 70px; height: 70px; border-radius: 50%;
-            border: 4px solid white; background: rgba(255,255,255,0.2);
-        }
-
-        /* Glaseffects */
-        .glass { background: var(--glass); backdrop-filter: blur(20px); border-radius: 15px; padding: 10px; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #fff; font-family: -apple-system, sans-serif; overflow: hidden; }
+        #video-viewport { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .bottom-bar { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-around; align-items: center; pointer-events: auto; }
+        .shutter { width: 75px; height: 75px; border-radius: 50%; border: 4px solid white; background: rgba(255,255,255,0.2); cursor: pointer; }
+        .controls { position: absolute; top: 50px; left: 20px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; }
+        input[type=range] { width: 150px; }
     </style>
 </head>
 <body>
-    <div id="app-container">
-        <video id="video-viewport" autoplay playsinline></video>
-        
-        <div class="ui-layer">
-            <header>
-                <div class="glass">Flash: Off</div>
-                <div class="glass">Smooth Cam Pro</div>
-            </header>
 
-            <div id="control-panel">
-                <div class="slider-row"><span>EXP</span><input type="range" id="exposure"></div>
-                <div class="slider-row"><span>SAT</span><input type="range" id="saturation"></div>
-                <div class="slider-row"><span>CONT</span><input type="range" id="contrast"></div>
-            </div>
+    <video id="video-viewport" autoplay playsinline></video>
 
-            <div class="bottom-bar">
-                <div id="gallery-preview" style="width:50px;height:50px;background:#333;border-radius:10px;"></div>
-                <button class="shutter" id="shutter-btn"></button>
-                <button class="glass" id="filter-btn">FILTERS</button>
-            </div>
+    <div class="ui">
+        <div class="controls">
+            <label>Exposure</label><input type="range" id="exp" min="50" max="200" value="100">
+            <label>Contrast</label><input type="range" id="con" min="50" max="200" value="100">
+            <label>Saturation</label><input type="range" id="sat" min="0" max="200" value="100">
+        </div>
+
+        <div class="bottom-bar">
+            <div id="thumb" style="width:50px;height:50px;background:#333;border-radius:10px;"></div>
+            <button class="shutter" id="shutter"></button>
+            <button style="padding:10px; border-radius:10px; border:none;" onclick="location.reload()">Reset</button>
         </div>
     </div>
+
+    <script>
+        const video = document.getElementById('video-viewport');
+        const shutter = document.getElementById('shutter');
+        const thumb = document.getElementById('thumb');
+
+        // Start Camera
+        async function start() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', frameRate: 60 } });
+            video.srcObject = stream;
+        }
+
+        // Apply Filters
+        function apply() {
+            const e = document.getElementById('exp').value;
+            const c = document.getElementById('con').value;
+            const s = document.getElementById('sat').value;
+            video.style.filter = `brightness(${e}%) contrast(${c}%) saturate(${s}%)`;
+        }
+
+        [ 'exp', 'con', 'sat' ].forEach(id => document.getElementById(id).oninput = apply);
+
+        // Take Photo
+        shutter.onclick = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.filter = video.style.filter;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const url = canvas.toDataURL('image/jpeg', 1.0);
+            thumb.style.backgroundImage = `url(${url})`;
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'SmoothCam.jpg';
+            link.click();
+        };
+
+        start();
+    </script>
 </body>
 </html>
