@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smooth Cam</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+            background: #111;
+        }
+
+        #videoElement, #photoCanvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Live Filters */
+        .filter-aesthetic { filter: contrast(125%) brightness(105%) saturate(115%) sepia(20%); }
+        .filter-4k { filter: contrast(135%) saturate(125%) drop-shadow(0 0 3px rgba(255,255,255,0.3)); }
+        .filter-cyberpunk { filter: contrast(140%) brightness(95%) saturate(160%) hue-rotate(20deg); }
+        .filter-y2k { filter: brightness(115%) contrast(110%) saturate(90%) sepia(10%); }
+        .filter-moody { filter: contrast(130%) brightness(85%) saturate(90%) hue-rotate(-10deg); }
+        .filter-normal { filter: none; }
+
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 0 20px;
+            z-index: 10;
+            scrollbar-width: none;
+        }
+        .top-bar::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: #fff;
+            color: #000;
+            font-weight: bold;
+            border-color: #fff;
+        }
+
+        .side-controls {
+            position: absolute;
+            right: 20px;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .side-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        .side-btn.active-ai {
+            background: #00d2ff;
+            color: #000;
+            border-color: #00d2ff;
+            font-weight: bold;
+        }
+
+        .controls {
+            height: 130px;
+            background: #000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 20px;
+            z-index: 10;
+        }
+
+        .shutter-btn {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: transparent;
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shutter-inner {
+            width: 61px;
+            height: 61px;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.1s;
+        }
+
+        .shutter-btn:active .shutter-inner {
+            transform: scale(0.9);
+        }
+
+        .gallery-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #222;
+            border: 2px solid rgba(255,255,255,0.8);
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .placeholder-space {
+            width: 50px;
+        }
+
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.96);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        #modal img {
+            max-width: 100%;
+            max-height: 45vh;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+
+        .edit-tools {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #161616;
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid #333;
+        }
+
+        .edit-tools label {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .edit-tools input[type=range] {
+            width: 100%;
+            accent-color: #fff;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 22px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .action-btn.secondary {
+            background: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="camera-container">
+        <div class="top-bar">
+            <button class="filter-btn active" onclick="setFilter('filter-aesthetic', this)">✨ Aesthetic</button>
+            <button class="filter-btn" onclick="setFilter('filter-4k', this)">⚡ 4K Boost</button>
+            <button class="filter-btn" onclick="setFilter('filter-cyberpunk', this)">🌆 Cyberpunk</button>
+            <button class="filter-btn" onclick="setFilter('filter-y2k', this)">💿 Y2K Flash</button>
+            <button class="filter-btn" onclick="setFilter('filter-moody', this)">🌙 Moody</button>
+            <button class="filter-btn" onclick="setFilter('filter-normal', this)">Original</button>
+        </div>
+
+        <div class="side-controls">
+            <button class="side-btn" id="aiBtn" onclick="toggleAI()" title="AI Smart Enhance">🤖</button>
+            <button class="side-btn" onclick="switchCamera()" title="Camera Wisselen">🔄</button>
+        </div>
+
+        <video id="videoElement" autoplay playsinline></video>
+        <canvas id="photoCanvas" style="display:none;"></canvas>
+    </div>
+
+    <div class="controls">
+        <div id="galleryThumb" class="gallery-preview" onclick="openGallery()"></div>
+        <div class="shutter-btn" onclick="takePhoto()">
+            <div class="shutter-inner"></div>
+        </div>
+        <div class="placeholder-space"></div>
+    </div>
+
+    <div id="modal">
+        <h2 style="font-size: 16px; letter-spacing: 0.5px;">Smooth Cam Studio</h2>
+        <img id="modalImage" src="" alt="Gemaakte foto">
+        
+        <div class="edit-tools">
+            <div>
+                <label>Helderheid</label>
+                <input type="range" min="40" max="160" value="100" id="rangeBrightness" oninput="applyEditing()">
+            </div>
+            <div>
+                <label>Contrast & Punch</label>
+                <input type="range" min="50" max="180" value="100" id="rangeContrast" oninput="applyEditing()">
+            </div>
+            <div>
+                <label>Saturatie (Kleur)</label>
+                <input type="range" min="0" max="200" value="100" id="rangeSaturation" oninput="applyEditing()">
+            </div>
+        </div>
+
+        <div class="modal-buttons">
+            <button class="action-btn secondary" onclick="closeGallery()">Sluiten</button>
+            <button class="action-btn" onclick="saveDirectToPhotos()">Bewaar in Foto's 📲</button>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('photoCanvas');
+        const galleryThumb = document.getElementById('galleryThumb');
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const aiBtn = document.getElementById('aiBtn');
+        
+        let lastPhotoData = null;
+        let activeFilterClass = 'filter-aesthetic';
+        let aiActive = false;
+        let useFrontCamera = false;
+        let currentStream = null;
+
+        video.classList.add(activeFilterClass);
+
+        async function initCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            try {
+                const constraints = {
+                    video: { facingMode: useFrontCamera ? 'user' : 'environment' },
+                    audio: false
+                };
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = currentStream;
+            } catch (err) {
+                alert("Geef cameratoegang in je browserinstellingen.");
+            }
+        }
+
+        initCamera();
+
+        function switchCamera() {
+            useFrontCamera = !useFrontCamera;
+            initCamera();
+        }
+
+        function setFilter(className, btnElement) {
+            video.className = '';
+            video.classList.add(className);
+            if (aiActive) video.classList.add('filter-4k');
+            activeFilterClass = className;
+
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+
+        function toggleAI() {
+            aiActive = !aiActive;
+            if (aiActive) {
+                aiBtn.classList.add('active-ai');
+                video.style.filter += ' brightness(108%) contrast(120%)';
+            } else {
+                aiBtn.classList.remove('active-ai');
+                setFilter(activeFilterClass, document.querySelector('.filter-btn.active'));
+            }
+        }
+
+        function takePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+
+            ctx.filter = window.getComputedStyle(video).filter;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            lastPhotoData = canvas.toDataURL('image/jpeg', 0.95);
+            galleryThumb.style.backgroundImage = `url(${lastPhotoData})`;
+            
+            openGallery();
+        }
+
+        function openGallery() {
+            if (!lastPhotoData) return;
+            modalImage.src = lastPhotoData;
+            document.getElementById('rangeBrightness').value = 100;
+            document.getElementById('rangeContrast').value = 100;
+            document.getElementById('rangeSaturation').value = 100;
+            modalImage.style.filter = 'none';
+            modal.style.display = 'flex';
+        }
+
+        function closeGallery() {
+            modal.style.display = 'none';
+        }
+
+        function applyEditing() {
+            if (!lastPhotoData) return;
+            const b = document.getElementById('rangeBrightness').value;
+            const c = document.getElementById('rangeContrast').value;
+            const s = document.getElementById('rangeSaturation').value;
+            modalImage.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%)`;
+        }
+
+        async function saveDirectToPhotos() {
+            if (!lastPhotoData) return;
+            
+            try {
+                const res = await fetch(lastPhotoData);
+                const blob = await res.blob();
+                const file = new File([blob], `SmoothCam_${Date.now()}.jpg`, { type: 'image/jpeg' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Smooth Cam Foto',
+                    });
+                } else {
+                    const link = document.createElement('a');
+                    link.href = lastPhotoData;
+                    link.download = `SmoothCam_${Date.now()}.jpg`;
+                    link.click();
+                }
+            } catch (error) {
+                console.log("Actie geannuleerd", error);
+            }
+        }
+    </script>
+</body>
+</html>
