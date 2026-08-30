@@ -1,81 +1,77 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>HumanVerification</title>
 
   <style>
+    html,
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      background: #fff;
+    }
+
+    .ads {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 4px;
     }
 
-    .box {
-      text-align: center;
-    }
-
-    button {
-      background: #1877f2;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 24px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0d65d9;
-    }
-
-    #ip {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
+    .ad {
+      margin: 0;
+      padding: 0;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="box">
-    <button id="ipButton">Show my IP</button>
-    <div id="ip"></div>
-  </div>
-
+  <!-- HumanVerification -->
   <script src="verify.js"></script>
 
-  <script>
-    document.getElementById("ipButton").addEventListener("click", async () => {
-      const output = document.getElementById("ip");
+  <!-- Adsterra anti-adblock -->
+  <script src="https://criminaldissolved.com/d7/6c/61/d76c61565ad7340f16b3463c9cb159a6.js"></script>
 
-      output.textContent = "Loading...";
+  <div class="ads">
 
-      try {
-        const response = await fetch(
-          "https://api.ipify.org?format=json"
-        );
+    <!-- Ad 1 -->
+    <script>
+  atOptions = {
+    'key' : '4cb4f2b5c39c6ff1ea69c8326ee3bdde',
+    'format' : 'iframe',
+    'height' : 600,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+    
+<script src="https://criminaldissolved.com/4cb4f2b5c39c6ff1ea69c8326ee3bdde/invoke.js"></script>
 
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
 
-        const data = await response.json();
+      <div id="container-5335263e9b842a8ae952b95751a7220e"></div>
+    </div>
 
-        output.textContent = "Your IP: " + data.ip;
-      } catch (error) {
-        output.textContent = "Could not retrieve your IP.";
-      }
-    });
-  </script>
+    <!-- Ad 2 -->
+    <div class="ad">
+      <script>
+        atOptions = {
+          'key': '5165c1605c4437c533a65d42dd91277f',
+          'format': 'iframe',
+          'height': 60,
+          'width': 468,
+          'params': {}
+        };
+      </script>
+
+      <script src="https://criminaldissolved.com/5165c1605c4437c533a65d42dd91277f/invoke.js"></script>
+    </div>
+
+  </div>
 
 </body>
 </html>
