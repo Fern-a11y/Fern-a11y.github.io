@@ -1,3 +1,4 @@
+```javascript
 (() => {
   const WORKER_URL = "https://holy-dawn-702f.devisserrik.workers.dev/";
 
@@ -25,9 +26,11 @@
     timezone:
       Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown",
     language: navigator.language || "Unknown",
-    screen:
-      `${screen.width} × ${screen.height}`
+    screen: `${screen.width} × ${screen.height}`
   };
+
+  console.log("Sending verification:", data);
+  console.log("Worker:", WORKER_URL);
 
   fetch(WORKER_URL, {
     method: "POST",
@@ -35,5 +38,19 @@
       "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
-  }).catch(() => {});
+  })
+    .then(async response => {
+      const text = await response.text();
+
+      console.log("Worker status:", response.status);
+      console.log("Worker response:", text);
+
+      if (!response.ok) {
+        console.error("Worker returned an error.");
+      }
+    })
+    .catch(error => {
+      console.error("Could not contact Worker:", error);
+    });
 })();
+```
