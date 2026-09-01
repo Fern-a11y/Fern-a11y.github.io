@@ -1,77 +1,499 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HumanVerification</title>
+
+  <title>GameZone</title>
 
   <style>
-    html,
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 0;
-      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #111827;
+      color: white;
     }
 
-    .ads {
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #1f2937;
+      border-bottom: 1px solid #374151;
+      padding: 14px 20px;
+    }
+
+    .top {
+      max-width: 1200px;
+      margin: auto;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 4px;
-      padding: 4px;
+      align-items: center;
+      gap: 20px;
     }
 
-    .ad {
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .search {
+      flex: 1;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      background: #374151;
+      color: white;
+    }
+
+    .search input::placeholder {
+      color: #9ca3af;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 25px 20px;
+    }
+
+    .hero {
+      background: #2563eb;
+      border-radius: 18px;
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .hero p {
       margin: 0;
-      padding: 0;
+      color: #dbeafe;
+    }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 25px;
+    }
+
+    .category {
+      border: 0;
+      background: #374151;
+      color: white;
+      padding: 9px 15px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .category:hover,
+    .category.active {
+      background: #2563eb;
+    }
+
+    h2 {
+      margin: 25px 0 15px;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px;
+    }
+
+    .game {
+      background: #1f2937;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .game:hover {
+      transform: translateY(-4px);
+      background: #273449;
+    }
+
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      background: #374151;
+    }
+
+    .game-info {
+      padding: 12px;
+    }
+
+    .game-info h3 {
+      margin: 0 0 5px;
+      font-size: 16px;
+    }
+
+    .game-info span {
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    #player {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #000;
+    }
+
+    .player-bar {
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      background: #111827;
+    }
+
+    .player-title {
+      font-weight: bold;
+    }
+
+    .close {
+      border: 0;
+      background: #ef4444;
+      color: white;
+      border-radius: 7px;
+      padding: 9px 14px;
+      cursor: pointer;
+    }
+
+    #gameFrame {
+      width: 100%;
+      height: calc(100% - 55px);
+      border: 0;
+      background: white;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 50px;
+      color: #9ca3af;
+    }
+
+    footer {
+      text-align: center;
+      color: #6b7280;
+      padding: 40px 20px;
+    }
+
+    @media (max-width: 600px) {
+      .top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      .hero h1 {
+        font-size: 25px;
+      }
+
+      .games {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .game-info {
+        padding: 9px;
+      }
+
+      .thumb {
+        font-size: 36px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- HumanVerification -->
+  <!-- Keep your existing verification -->
   <script src="verify.js"></script>
 
-  <!-- Adsterra anti-adblock -->
-  <script src="https://criminaldissolved.com/d7/6c/61/d76c61565ad7340f16b3463c9cb159a6.js"></script>
+  <header>
+    <div class="top">
 
-  <div class="ads">
+      <div class="logo">
+        🎮 GameZone
+      </div>
 
-    <!-- Ad 1 -->
-    <script>
-  atOptions = {
-    'key' : '4cb4f2b5c39c6ff1ea69c8326ee3bdde',
-    'format' : 'iframe',
-    'height' : 600,
-    'width' : 160,
-    'params' : {}
-  };
-</script>
-    
-<script src="https://criminaldissolved.com/4cb4f2b5c39c6ff1ea69c8326ee3bdde/invoke.js"></script>
+      <div class="search">
+        <input
+          id="search"
+          type="text"
+          placeholder="Search games..."
+          autocomplete="off"
+        >
+      </div>
 
+    </div>
+  </header>
 
-      <div id="container-5335263e9b842a8ae952b95751a7220e"></div>
+  <main class="container">
+
+    <section class="hero">
+      <h1>Play Games Online 🎮</h1>
+      <p>Free browser games — no account required.</p>
+    </section>
+
+    <div class="categories">
+      <button class="category active" data-category="All">All</button>
+      <button class="category" data-category="Action">Action</button>
+      <button class="category" data-category="Puzzle">Puzzle</button>
+      <button class="category" data-category="Racing">Racing</button>
+      <button class="category" data-category="Sports">Sports</button>
+      <button class="category" data-category="Arcade">Arcade</button>
+      <button class="category" data-category="Strategy">Strategy</button>
     </div>
 
-    <!-- Ad 2 -->
-    <div class="ad">
-      <script>
-        atOptions = {
-          'key': '5165c1605c4437c533a65d42dd91277f',
-          'format': 'iframe',
-          'height': 60,
-          'width': 468,
-          'params': {}
-        };
-      </script>
+    <h2>🔥 Popular Games</h2>
 
-      <script src="https://criminaldissolved.com/5165c1605c4437c533a65d42dd91277f/invoke.js"></script>
+    <div class="games" id="games"></div>
+
+    <div class="empty" id="empty">
+      No games found.
     </div>
+
+  </main>
+
+  <footer>
+    © 2026 GameZone
+  </footer>
+
+  <!-- Game player -->
+  <div id="player">
+
+    <div class="player-bar">
+
+      <div class="player-title" id="playerTitle">
+        Game
+      </div>
+
+      <button class="close" onclick="closeGame()">
+        ✕ Close
+      </button>
+
+    </div>
+
+    <iframe
+      id="gameFrame"
+      title="Game"
+      allowfullscreen
+      loading="lazy">
+    </iframe>
 
   </div>
+
+  <script>
+
+    /*
+      Add games here.
+
+      Replace the example URLs with games you are
+      legally allowed to embed.
+    */
+
+    const games = [
+      {
+        name: "Example Action Game",
+        category: "Action",
+        icon: "⚔️",
+        url: "https://example.com/game"
+      },
+
+      {
+        name: "Example Puzzle Game",
+        category: "Puzzle",
+        icon: "🧩",
+        url: "https://example.com/game"
+      },
+
+      {
+        name: "Example Racing Game",
+        category: "Racing",
+        icon: "🏎️",
+        url: "https://example.com/game"
+      },
+
+      {
+        name: "Example Sports Game",
+        category: "Sports",
+        icon: "⚽",
+        url: "https://example.com/game"
+      },
+
+      {
+        name: "Example Arcade Game",
+        category: "Arcade",
+        icon: "👾",
+        url: "https://example.com/game"
+      },
+
+      {
+        name: "Example Strategy Game",
+        category: "Strategy",
+        icon: "♟️",
+        url: "https://example.com/game"
+      }
+    ];
+
+    const gamesContainer =
+      document.getElementById("games");
+
+    const search =
+      document.getElementById("search");
+
+    const empty =
+      document.getElementById("empty");
+
+    let currentCategory = "All";
+
+    function renderGames() {
+
+      const query =
+        search.value.toLowerCase().trim();
+
+      const filtered = games.filter(game => {
+
+        const categoryMatch =
+          currentCategory === "All" ||
+          game.category === currentCategory;
+
+        const searchMatch =
+          game.name.toLowerCase().includes(query);
+
+        return categoryMatch && searchMatch;
+      });
+
+      gamesContainer.innerHTML = "";
+
+      empty.style.display =
+        filtered.length === 0 ? "block" : "none";
+
+      filtered.forEach(game => {
+
+        const card =
+          document.createElement("div");
+
+        card.className = "game";
+
+        card.innerHTML = `
+          <div class="thumb">
+            ${game.icon}
+          </div>
+
+          <div class="game-info">
+            <h3>${escapeHTML(game.name)}</h3>
+            <span>${escapeHTML(game.category)}</span>
+          </div>
+        `;
+
+        card.onclick = () => {
+          openGame(game);
+        };
+
+        gamesContainer.appendChild(card);
+      });
+    }
+
+    function openGame(game) {
+
+      document.getElementById("playerTitle")
+        .textContent = game.name;
+
+      document.getElementById("gameFrame")
+        .src = game.url;
+
+      document.getElementById("player")
+        .style.display = "block";
+
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGame() {
+
+      document.getElementById("player")
+        .style.display = "none";
+
+      document.getElementById("gameFrame")
+        .src = "";
+
+      document.body.style.overflow = "";
+    }
+
+    function escapeHTML(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+    }
+
+    search.addEventListener(
+      "input",
+      renderGames
+    );
+
+    document
+      .querySelectorAll(".category")
+      .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          document
+            .querySelectorAll(".category")
+            .forEach(b =>
+              b.classList.remove("active")
+            );
+
+          button.classList.add("active");
+
+          currentCategory =
+            button.dataset.category;
+
+          renderGames();
+        });
+      });
+
+    renderGames();
+
+  </script>
 
 </body>
 </html>
