@@ -14,23 +14,23 @@
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #111827;
-      color: white;
+      background: #0f172a;
+      color: #fff;
+      font-family: Arial, sans-serif;
     }
 
     header {
       position: sticky;
       top: 0;
-      z-index: 10;
-      background: #1f2937;
-      border-bottom: 1px solid #374151;
-      padding: 14px 20px;
+      z-index: 20;
+      background: #111827;
+      border-bottom: 1px solid #263244;
     }
 
-    .top {
-      max-width: 1200px;
+    .header {
+      max-width: 1250px;
       margin: auto;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 20px;
@@ -38,7 +38,7 @@
 
     .logo {
       font-size: 25px;
-      font-weight: bold;
+      font-weight: 800;
       white-space: nowrap;
     }
 
@@ -50,52 +50,52 @@
       width: 100%;
       padding: 12px 16px;
       border: 0;
+      outline: 0;
       border-radius: 10px;
-      outline: none;
+      background: #273449;
+      color: #fff;
       font-size: 15px;
-      background: #374151;
-      color: white;
     }
 
     .search input::placeholder {
-      color: #9ca3af;
+      color: #94a3b8;
     }
 
-    .container {
-      max-width: 1200px;
+    main {
+      max-width: 1250px;
       margin: auto;
-      padding: 25px 20px;
+      padding: 25px 20px 50px;
     }
 
     .hero {
-      background: #2563eb;
+      padding: 32px;
       border-radius: 18px;
-      padding: 30px;
-      margin-bottom: 25px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      margin-bottom: 22px;
     }
 
     .hero h1 {
       margin: 0 0 8px;
-      font-size: 32px;
+      font-size: 34px;
     }
 
     .hero p {
       margin: 0;
-      color: #dbeafe;
+      color: #e0e7ff;
     }
 
     .categories {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding-bottom: 8px;
       margin-bottom: 25px;
+      padding-bottom: 4px;
     }
 
     .category {
       border: 0;
-      background: #374151;
-      color: white;
+      background: #1e293b;
+      color: #cbd5e1;
       padding: 9px 15px;
       border-radius: 999px;
       cursor: pointer;
@@ -105,53 +105,60 @@
     .category:hover,
     .category.active {
       background: #2563eb;
+      color: white;
     }
 
     h2 {
-      margin: 25px 0 15px;
+      margin: 22px 0 15px;
     }
 
     .games {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-      gap: 16px;
+      gap: 15px;
     }
 
     .game {
-      background: #1f2937;
+      background: #1e293b;
       border-radius: 14px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.15s, background 0.15s;
+      transition: transform .15s, background .15s;
     }
 
     .game:hover {
       transform: translateY(-4px);
-      background: #273449;
+      background: #263449;
     }
 
-    .thumb {
-      width: 100%;
+    .icon {
       aspect-ratio: 16 / 10;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       font-size: 48px;
-      background: #374151;
+      background: #334155;
     }
 
-    .game-info {
+    .info {
       padding: 12px;
     }
 
-    .game-info h3 {
+    .info h3 {
       margin: 0 0 5px;
       font-size: 16px;
     }
 
-    .game-info span {
-      color: #9ca3af;
+    .info span {
+      color: #94a3b8;
       font-size: 13px;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      padding: 50px;
+      color: #94a3b8;
     }
 
     #player {
@@ -162,65 +169,62 @@
       background: #000;
     }
 
-    .player-bar {
+    .playerbar {
       height: 55px;
+      background: #111827;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 15px;
-      background: #111827;
+      padding: 0 14px;
     }
 
-    .player-title {
+    #gameTitle {
       font-weight: bold;
     }
 
-    .close {
+    .buttons {
+      display: flex;
+      gap: 7px;
+    }
+
+    .playerbutton {
       border: 0;
-      background: #ef4444;
-      color: white;
       border-radius: 7px;
-      padding: 9px 14px;
+      padding: 9px 13px;
+      color: #fff;
       cursor: pointer;
     }
 
-    #gameFrame {
+    .fullscreen {
+      background: #2563eb;
+    }
+
+    .close {
+      background: #dc2626;
+    }
+
+    #frame {
+      display: block;
       width: 100%;
       height: calc(100% - 55px);
       border: 0;
-      background: white;
-    }
-
-    .empty {
-      display: none;
-      text-align: center;
-      padding: 50px;
-      color: #9ca3af;
+      background: #fff;
     }
 
     footer {
       text-align: center;
-      color: #6b7280;
-      padding: 40px 20px;
+      padding: 35px;
+      color: #64748b;
     }
 
-    @media (max-width: 600px) {
-      .top {
+    @media(max-width:600px) {
+      .header {
         flex-direction: column;
         align-items: stretch;
-        gap: 10px;
       }
 
       .logo {
         text-align: center;
-      }
-
-      .hero {
-        padding: 22px;
-      }
-
-      .hero h1 {
-        font-size: 25px;
       }
 
       .games {
@@ -228,12 +232,12 @@
         gap: 10px;
       }
 
-      .game-info {
-        padding: 9px;
+      .hero h1 {
+        font-size: 26px;
       }
 
-      .thumb {
-        font-size: 36px;
+      .hero {
+        padding: 24px;
       }
     }
   </style>
@@ -241,11 +245,11 @@
 
 <body>
 
-  <!-- Keep your existing verification -->
+  <!-- Your existing verification -->
   <script src="verify.js"></script>
 
   <header>
-    <div class="top">
+    <div class="header">
 
       <div class="logo">
         🎮 GameZone
@@ -254,33 +258,32 @@
       <div class="search">
         <input
           id="search"
-          type="text"
+          type="search"
           placeholder="Search games..."
-          autocomplete="off"
-        >
+          autocomplete="off">
       </div>
 
     </div>
   </header>
 
-  <main class="container">
+  <main>
 
     <section class="hero">
       <h1>Play Games Online 🎮</h1>
-      <p>Free browser games — no account required.</p>
+      <p>50+ browser games. No account required.</p>
     </section>
 
     <div class="categories">
-      <button class="category active" data-category="All">All</button>
-      <button class="category" data-category="Action">Action</button>
-      <button class="category" data-category="Puzzle">Puzzle</button>
-      <button class="category" data-category="Racing">Racing</button>
-      <button class="category" data-category="Sports">Sports</button>
-      <button class="category" data-category="Arcade">Arcade</button>
-      <button class="category" data-category="Strategy">Strategy</button>
+      <button class="category active" data-cat="All">All</button>
+      <button class="category" data-cat="Arcade">Arcade</button>
+      <button class="category" data-cat="Puzzle">Puzzle</button>
+      <button class="category" data-cat="Action">Action</button>
+      <button class="category" data-cat="Racing">Racing</button>
+      <button class="category" data-cat="Strategy">Strategy</button>
+      <button class="category" data-cat="Sports">Sports</button>
     </div>
 
-    <h2>🔥 Popular Games</h2>
+    <h2>🔥 Games</h2>
 
     <div class="games" id="games"></div>
 
@@ -291,29 +294,39 @@
   </main>
 
   <footer>
-    © 2026 GameZone
+    GameZone
   </footer>
 
-  <!-- Game player -->
   <div id="player">
 
-    <div class="player-bar">
+    <div class="playerbar">
 
-      <div class="player-title" id="playerTitle">
+      <div id="gameTitle">
         Game
       </div>
 
-      <button class="close" onclick="closeGame()">
-        ✕ Close
-      </button>
+      <div class="buttons">
+
+        <button
+          class="playerbutton fullscreen"
+          onclick="makeFullscreen()">
+          ⛶ Fullscreen
+        </button>
+
+        <button
+          class="playerbutton close"
+          onclick="closeGame()">
+          ✕ Close
+        </button>
+
+      </div>
 
     </div>
 
     <iframe
-      id="gameFrame"
-      title="Game"
+      id="frame"
       allowfullscreen
-      loading="lazy">
+      title="Game">
     </iframe>
 
   </div>
@@ -321,88 +334,122 @@
   <script>
 
     /*
-      Add games here.
+      Games from:
+      github.com/prateek121/90s-games
 
-      Replace the example URLs with games you are
-      legally allowed to embed.
+      The repository contains 114 single-file HTML5 games
+      and is MIT licensed.
+
+      IMPORTANT:
+      Keep the repository's MIT copyright/license notice
+      when redistributing the game code.
     */
 
+    const BASE =
+      "https://prateek121.github.io/90s-games/games/";
+
     const games = [
-      {
-        name: "Example Action Game",
-        category: "Action",
-        icon: "⚔️",
-        url: "https://example.com/game"
-      },
 
-      {
-        name: "Example Puzzle Game",
-        category: "Puzzle",
-        icon: "🧩",
-        url: "https://example.com/game"
-      },
+      ["Asteroids", "asteroids.html", "Arcade", "☄️"],
+      ["Tetris", "tetris.html", "Puzzle", "🧱"],
+      ["Snake", "snake.html", "Arcade", "🐍"],
+      ["Pac-Man", "pacman.html", "Arcade", "👻"],
+      ["Space Invaders", "space-invaders.html", "Action", "👾"],
+      ["2048", "2048.html", "Puzzle", "🔢"],
+      ["Minesweeper", "minesweeper.html", "Puzzle", "💣"],
+      ["Sokoban", "sokoban.html", "Puzzle", "📦"],
+      ["Bullet Hell", "bullet-hell.html", "Action", "💥"],
+      ["Vaporwave Escape", "vaporwave-escape.html", "Arcade", "🌌"],
 
-      {
-        name: "Example Racing Game",
-        category: "Racing",
-        icon: "🏎️",
-        url: "https://example.com/game"
-      },
+      ["Breakout", "breakout.html", "Arcade", "🧱"],
+      ["Pong", "pong.html", "Sports", "🏓"],
+      ["Flappy Bird", "flappy-bird.html", "Arcade", "🐦"],
+      ["Frogger", "frogger.html", "Arcade", "🐸"],
+      ["Helicopter", "helicopter.html", "Arcade", "🚁"],
+      ["Doodle Jump", "doodle-jump.html", "Arcade", "⬆️"],
+      ["Platformer", "platformer.html", "Action", "🏃"],
+      ["Space Shooter", "space-shooter.html", "Action", "🚀"],
+      ["Tank Battle", "tank-battle.html", "Action", "🛡️"],
+      ["Tower Defense", "tower-defense.html", "Strategy", "🏰"],
 
-      {
-        name: "Example Sports Game",
-        category: "Sports",
-        icon: "⚽",
-        url: "https://example.com/game"
-      },
+      ["Chess", "chess.html", "Strategy", "♟️"],
+      ["Checkers", "checkers.html", "Strategy", "⚫"],
+      ["Connect Four", "connect-four.html", "Strategy", "🔴"],
+      ["Tic Tac Toe", "tic-tac-toe.html", "Strategy", "⭕"],
+      ["Solitaire", "solitaire.html", "Strategy", "🃏"],
+      ["Blackjack", "blackjack.html", "Strategy", "🂡"],
+      ["Memory", "memory.html", "Puzzle", "🧠"],
+      ["Sudoku", "sudoku.html", "Puzzle", "🔢"],
+      ["Hangman", "hangman.html", "Puzzle", "🔤"],
+      ["Wordle", "wordle.html", "Puzzle", "🟩"],
 
-      {
-        name: "Example Arcade Game",
-        category: "Arcade",
-        icon: "👾",
-        url: "https://example.com/game"
-      },
+      ["Racing", "racing.html", "Racing", "🏎️"],
+      ["Drift", "drift.html", "Racing", "💨"],
+      ["Road Racer", "road-racer.html", "Racing", "🛣️"],
+      ["Car Dodge", "car-dodge.html", "Racing", "🚗"],
+      ["Motorbike", "motorbike.html", "Racing", "🏍️"],
 
-      {
-        name: "Example Strategy Game",
-        category: "Strategy",
-        icon: "♟️",
-        url: "https://example.com/game"
-      }
+      ["Football", "football.html", "Sports", "⚽"],
+      ["Basketball", "basketball.html", "Sports", "🏀"],
+      ["Soccer", "soccer.html", "Sports", "⚽"],
+      ["Golf", "golf.html", "Sports", "⛳"],
+      ["Baseball", "baseball.html", "Sports", "⚾"],
+
+      ["Alien Shooter", "alien-shooter.html", "Action", "👽"],
+      ["Ninja", "ninja.html", "Action", "🥷"],
+      ["Zombie", "zombie.html", "Action", "🧟"],
+      ["Dungeon", "dungeon.html", "Action", "🏰"],
+      ["Robot Attack", "robot-attack.html", "Action", "🤖"],
+
+      ["Brick Breaker", "brick-breaker.html", "Arcade", "🎯"],
+      ["Pinball", "pinball.html", "Arcade", "🎰"],
+      ["Astro Runner", "astro-runner.html", "Arcade", "🚀"],
+      ["Endless Runner", "endless-runner.html", "Arcade", "🏃"],
+      ["Maze", "maze.html", "Puzzle", "🌀"],
+      ["Lights Out", "lights-out.html", "Puzzle", "💡"],
+      ["Box Puzzle", "box-puzzle.html", "Puzzle", "📦"],
+      ["Color Match", "color-match.html", "Puzzle", "🎨"],
+      ["Reaction", "reaction.html", "Arcade", "⚡"],
+      ["Typing", "typing.html", "Puzzle", "⌨️"]
+
     ];
 
-    const gamesContainer =
+    const container =
       document.getElementById("games");
-
-    const search =
-      document.getElementById("search");
 
     const empty =
       document.getElementById("empty");
 
-    let currentCategory = "All";
+    const search =
+      document.getElementById("search");
 
-    function renderGames() {
+    let category = "All";
+
+    function render() {
 
       const query =
         search.value.toLowerCase().trim();
 
-      const filtered = games.filter(game => {
+      container.innerHTML = "";
 
-        const categoryMatch =
-          currentCategory === "All" ||
-          game.category === currentCategory;
+      const filtered =
+        games.filter(game => {
 
-        const searchMatch =
-          game.name.toLowerCase().includes(query);
+          const name = game[0];
+          const cat = game[2];
 
-        return categoryMatch && searchMatch;
-      });
+          const categoryOK =
+            category === "All" ||
+            cat === category;
 
-      gamesContainer.innerHTML = "";
+          const searchOK =
+            name.toLowerCase().includes(query);
+
+          return categoryOK && searchOK;
+        });
 
       empty.style.display =
-        filtered.length === 0 ? "block" : "none";
+        filtered.length ? "none" : "block";
 
       filtered.forEach(game => {
 
@@ -412,31 +459,28 @@
         card.className = "game";
 
         card.innerHTML = `
-          <div class="thumb">
-            ${game.icon}
-          </div>
+          <div class="icon">${game[3]}</div>
 
-          <div class="game-info">
-            <h3>${escapeHTML(game.name)}</h3>
-            <span>${escapeHTML(game.category)}</span>
+          <div class="info">
+            <h3>${escapeHTML(game[0])}</h3>
+            <span>${escapeHTML(game[2])}</span>
           </div>
         `;
 
-        card.onclick = () => {
-          openGame(game);
-        };
+        card.onclick = () =>
+          openGame(game[0], game[1]);
 
-        gamesContainer.appendChild(card);
+        container.appendChild(card);
       });
     }
 
-    function openGame(game) {
+    function openGame(name, file) {
 
-      document.getElementById("playerTitle")
-        .textContent = game.name;
+      document.getElementById("gameTitle")
+        .textContent = name;
 
-      document.getElementById("gameFrame")
-        .src = game.url;
+      document.getElementById("frame")
+        .src = BASE + file;
 
       document.getElementById("player")
         .style.display = "block";
@@ -446,13 +490,23 @@
 
     function closeGame() {
 
+      document.getElementById("frame")
+        .src = "";
+
       document.getElementById("player")
         .style.display = "none";
 
-      document.getElementById("gameFrame")
-        .src = "";
-
       document.body.style.overflow = "";
+    }
+
+    function makeFullscreen() {
+
+      const frame =
+        document.getElementById("frame");
+
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen();
+      }
     }
 
     function escapeHTML(text) {
@@ -467,7 +521,7 @@
 
     search.addEventListener(
       "input",
-      renderGames
+      render
     );
 
     document
@@ -478,20 +532,20 @@
 
           document
             .querySelectorAll(".category")
-            .forEach(b =>
-              b.classList.remove("active")
+            .forEach(btn =>
+              btn.classList.remove("active")
             );
 
           button.classList.add("active");
 
-          currentCategory =
-            button.dataset.category;
+          category =
+            button.dataset.cat;
 
-          renderGames();
+          render();
         });
       });
 
-    renderGames();
+    render();
 
   </script>
 
